@@ -1,0 +1,29 @@
+POST http://localhost:8080/auth/realms/aerobase/protocol/openid-connect/token
+200
+103 ms
+Network
+addresses: {…}
+local: {…}
+address: "::1"
+family: "IPv6"
+port: 52076
+remote: {…}
+address: "::1"
+family: "IPv6"
+port: 8080
+Request Headers
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic dGVzdDozNGU4YTEyMC01OWNkLTRlOGEtYWM5Mi0zNmU2MDM0MGEyMGU=
+User-Agent: PostmanRuntime/7.26.10
+Accept: */*
+Cache-Control: no-cache
+Postman-Token: fda93dc4-b402-481d-bbfc-202ab9f55cb0
+Host: localhost:8080
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 71
+Request Body
+grant_type: "password"
+username: "testuser"
+password: "Aa123456!"
+scope: "openid"

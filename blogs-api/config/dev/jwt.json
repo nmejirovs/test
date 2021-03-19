@@ -1,0 +1,3 @@
+{
+    "auth_conf_url": "http://localhost:8080/auth/realms/aerobase/.well-known/openid-configuration"
+}
