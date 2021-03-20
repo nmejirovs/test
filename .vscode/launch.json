@@ -12,7 +12,8 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\blogs-api\\server.js",
-            "cwd": "${workspaceFolder}\\blogs-api"
+            "cwd": "${workspaceFolder}\\blogs-api",
+            "outputCapture": "std"
         }
     ]
 }

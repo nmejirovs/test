@@ -1,11 +1,18 @@
-const config = require(`../config/${process.NODE_ENV || 'dev'}/jwt.json`)
 const jwksClient = require('jwks-rsa');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const httpClient = require('../util/http_client');
+
+let config;
 
 let client;
-const init = async ()=>{
+const init = async (conf)=>{
+    config = conf;
     client = jwksClient({
-        jwksUri: config.auth_conf_url
+        jwksUri: config.auth_conf_url,
+        fetcher: async (url)=>{
+            const response = await httpClient.get(url);
+            return response.data;
+        }
     });
 };
 
