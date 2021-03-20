@@ -9,11 +9,24 @@ const express = require("express"),
 
 const app = express();
 app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
+	bodyParser.urlencoded({
+		extended: true,
+	})
 );
 app.use(bodyParser.json());
+
+const verify_token = async (req, res, next) => {
+
+	try {
+		req.token = req.headers.authorization;
+		req.token_data = await token_verifier.verify_token(req.token.split(' ')[1]);
+		next();
+	} catch (err) {
+		res.status(401).send(err.message);
+	}
+}
+
+app.use(verify_token);
 
 app.use("/blogs", require("./routes/blogs"));
 
@@ -54,7 +67,7 @@ app.use(
 	swaggerUi.setup(specs, { explorer: true })
 );
 
-let startprom = new Promise(async (resolve, reject)=>{
+let startprom = new Promise(async (resolve, reject) => {
 	try {
 		const env = process.NODE_ENV || 'dev';
 		await token_verifier.init(require(`./config/${env}/jwt.json`));
@@ -65,10 +78,12 @@ let startprom = new Promise(async (resolve, reject)=>{
 	}
 });
 
-startprom.then(()=>{
+
+
+startprom.then(() => {
 	app.listen(PORT);
 	logger.getLoggger().verbose("Server listening on port: " + PORT);
-}).catch((err)=>{
+}).catch((err) => {
 	logger.getLoggger().verbose(err);
 });
 
