@@ -2,7 +2,7 @@ const express = require("express"),
 	bodyParser = require("body-parser"),
 	swaggerJsdoc = require("swagger-jsdoc"),
 	swaggerUi = require("swagger-ui-express"),
-	tokenVerifier = require('./security/tokenVerifier'),
+	tokenVerifier = require('./security/token_verifier'),
 	logger = require('./util/logger'),
 	blogsDb = require('./db/blogs_db');
 
@@ -15,22 +15,6 @@ app.use(
 	})
 );
 app.use(bodyParser.json());
-
-const verify_token = async (req, res, next) => {
-
-	try {
-		req.token = req.headers.authorization;
-		let token_data = await tokenVerifier.verify_token(req.token.split(' ')[1]);
-		req.userData = { userName: token_data.preferred_username };
-		next();
-	} catch (err) {
-		res.status(401).send(err.message);
-	}
-}
-
-app.use(verify_token);
-
-app.use("/blogs", require("./routes/blogs"));
 
 const PORT = process.env.PORT || 3000
 
@@ -69,6 +53,18 @@ app.use(
 	swaggerUi.setup(specs, { explorer: true })
 );
 
+const verify_token = async (req, res, next) => {
+
+	try {
+		req.token = req.headers.authorization;
+		let token_data = await tokenVerifier.verify_token(req.token.split(' ')[1]);
+		req.userData = { userName: token_data.preferred_username };
+		next();
+	} catch (err) {
+		res.status(401).send(err.message);
+	}
+}
+
 let startprom = new Promise(async (resolve, reject) => {
 	try {
 		const env = process.NODE_ENV || 'dev';
@@ -81,12 +77,14 @@ let startprom = new Promise(async (resolve, reject) => {
 	}
 });
 
+app.use(verify_token);
 
+app.use("/blogs", require("./routes/blogs"));
 
 startprom.then(() => {
 	app.listen(PORT);
 	logger.getLoggger().verbose("Server listening on port: " + PORT);
 }).catch((err) => {
-	logger.getLoggger().verbose(err);
+	logger.getLoggger().error(err);
 });
 

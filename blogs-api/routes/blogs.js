@@ -10,25 +10,31 @@
  *          - finished
  *        properties:
  *          id:
- *            type: integer
+ *            type: string
  *            description: The auto-generated id of the blog.
  *          title:
  *            type: string
- *            description: The title of your blog.
+ *            description: The title of blog.
+ *          content:
+ *            type: string
+ *            description: The content of blog.
  *          author:
  *            type: string
  *            description: Who wrote the blog?
- *          finished:
- *            type: boolean
- *            description: Have you finished reading it?
  *          createdAt:
  *            type: string
  *            format: date
  *            description: The date of the record creation.
+ *          updatedAt:
+ *            type: string
+ *            format: date
+ *            description: The date of the record update.
  *        example:
- *           title: The Pragmatic Programmer
- *           author: Andy Hunt / Dave Thomas
- *           finished: true
+ *          title: Blog about something
+ *          content: Blog content Blog content Blog content Blog content Blog content 
+ *          author: Test User
+ *          createdAt: "2021-03-20T22:01:10"
+ *          updatedAt: "2021-03-21T22:01:10"
 */
 /**
  * @swagger
@@ -118,70 +124,53 @@
  *          description: Blog not found.
  */
 
-const express = require("express");
-const router = express.Router();
+const express = require('express'),
+     logger = require('../util/logger'),
+     router = express.Router();
 
-const blogs = require("../util/data");
+const blogsContentSvc = require('../services/blogs_content_svc');
 
-router.get("/", async (req, res) => {
-	res.status(200).json(blogs);
+router.get('/', async (req, res) => {
+	res.status(200).json([]);
 });
 
-router.get("/:id", async (req, res) => {
-	let blog = blogs.find(function (item) {
-		return item.id == req.params.id;
-	});
+router.get('/:id', async (req, res) => {
+	let blog = {}
 
 	blog ? res.status(200).json(blog) : res.sendStatus(404);
 });
 
-router.post("/", async (req, res) => {
-	const { title, author, finished } = req.body;
-
-	let blog = {
-		id: blogs.length + 1,
-		title: title,
-		author: author,
-		finished: finished !== undefined ? finished : false,
-		createdAt: new Date(),
-	};
-
-	blogs.push(blog);
-
-	res.status(201).json(blog);
+router.post('/', async (req, res) => {
+	try {
+		const { title,  content, author, createdAt, updatedAt } = req.body;
+		await blogsContentSvc.addBlog({ title,  content, author, createdAt, updatedAt });	
+	} catch (error) {
+		logger.getLoggger().error(error);
+		res.status(500).send('Error on adding blog');
+	}
+	
+	
+	res.status(201).json({ title,  content, author, createdAt, updatedAt });
 });
 
-router.put("/:id", async (req, res) => {
-	let blog = blogs.find(function (item) {
-		return item.id == req.params.id;
-	});
+router.put('/:id', async (req, res) => {
+	
 
-	if (blog) {
-		const { title, author, finished } = req.body;
-
-		let updated = {
-			id: blog.id,
-			title: title !== undefined ? title : blog.title,
-			author: author !== undefined ? author : blog.author,
-			finished: finished !== undefined ? finished : blog.finished,
-			createdAt: blog.createdAt,
-		};
-
-		blogs.splice(blogs.indexOf(blog), 1, updated);
+	if ({}) {
+		
 
 		res.sendStatus(204);
 	} else {
+		
 		res.sendStatus(404);
 	}
 });
 
-router.delete("/:id", async (req, res) => {
-	let blog = blogs.find(function (item) {
-		return item.id == req.params.id;
-	});
+router.delete('/:id', async (req, res) => {
+	
 
-	if (blog) {
-		blogs.splice(blogs.indexOf(blog), 1);
+	if ({}) {
+		
 	} else {
 		return res.sendStatus(404);
 	}
