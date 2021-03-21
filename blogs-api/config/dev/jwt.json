@@ -1,3 +1,3 @@
 {
-    "auth_conf_url": "http://me.server.com:8080/auth/realms/aerobase/protocol/openid-connect/certs"
+    "auth_conf_url": "https://lemur-2.cloud-iam.com/auth/realms/natantest/protocol/openid-connect/certs"
 }

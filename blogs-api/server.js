@@ -2,8 +2,9 @@ const express = require("express"),
 	bodyParser = require("body-parser"),
 	swaggerJsdoc = require("swagger-jsdoc"),
 	swaggerUi = require("swagger-ui-express"),
-	token_verifier = require('./security/token_verifier'),
-	logger = require('./util/logger');
+	tokenVerifier = require('./security/tokenVerifier'),
+	logger = require('./util/logger'),
+	blogsDb = require('./db/blogs_db');
 
 
 
@@ -19,7 +20,8 @@ const verify_token = async (req, res, next) => {
 
 	try {
 		req.token = req.headers.authorization;
-		req.token_data = await token_verifier.verify_token(req.token.split(' ')[1]);
+		let token_data = await tokenVerifier.verify_token(req.token.split(' ')[1]);
+		req.userData = { userName: token_data.preferred_username };
 		next();
 	} catch (err) {
 		res.status(401).send(err.message);
@@ -70,8 +72,9 @@ app.use(
 let startprom = new Promise(async (resolve, reject) => {
 	try {
 		const env = process.NODE_ENV || 'dev';
-		await token_verifier.init(require(`./config/${env}/jwt.json`));
+		await tokenVerifier.init(require(`./config/${env}/jwt.json`));
 		await logger.init(require(`./config/${env}/logger.json`));
+		await blogsDb.init(require(`./config/${env}/elastic_srch.json`))
 		resolve();
 	} catch (error) {
 		reject(error);
