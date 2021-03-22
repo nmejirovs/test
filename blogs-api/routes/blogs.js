@@ -144,13 +144,11 @@ router.post('/', async (req, res) => {
 	try {
 		const { title,  content, author, createdAt, updatedAt } = req.body;
 		await blogsContentSvc.addBlog({ title,  content, author, createdAt, updatedAt });	
+		res.status(201).json({ title,  content, author, createdAt, updatedAt });
 	} catch (error) {
 		logger.getLoggger().error(error);
 		res.status(500).send('Error on adding blog');
 	}
-	
-	
-	res.status(201).json({ title,  content, author, createdAt, updatedAt });
 });
 
 router.put('/:id', async (req, res) => {

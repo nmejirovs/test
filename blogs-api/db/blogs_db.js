@@ -6,7 +6,7 @@ const init = async (conf) => {
 };
 
 const addBlog = async (blog)=>{
-    const res = await httpClient.post(`${config['server_url']}/blogs/_doc/`,blog);
+    const res = await httpClient.post(`${config['server_url']}/blog/_doc/`,blog);
     if(get(res, 'result') == 'created'){
         return get(res, '_id');
     }
