@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\blogs-api\\server.js",
+            "program": "${workspaceFolder}\\blogs-api\\bin\\server",
             "cwd": "${workspaceFolder}\\blogs-api",
             "outputCapture": "std"
         }
