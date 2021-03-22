@@ -1,8 +1,0 @@
-{
-    "hosts":[
-        {
-          "port": 6381,
-          "host": "me.server.com"
-        }
-      ]
-}

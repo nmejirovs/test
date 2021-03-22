@@ -1,9 +1,15 @@
 const Redis = require("ioredis");
-let cluster;
+let client;
 
 
 const init = async (conf)=>{
-    cluster = new Redis.Cluster(conf.hosts);
+    client = new Redis(conf.host);
+      
+    await client.set("foo", "bar");
 
-    cluster.set("foo", "bar");
+    let res = await client.get("foo");
+};
+
+module.exports = {
+    init
 };
