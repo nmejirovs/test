@@ -1,33 +1,27 @@
-version: '3.3'
+version: "3.7"
+
 services:
-  mysql-db:
-    image: mysql:8.0
-    restart: unless-stopped
+  redis:
+    image: 'bitnami/redis:latest'
     environment:
-      MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'user'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'password'
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'password'
+      - ALLOW_EMPTY_PASSWORD=yes
     ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where our data will be persisted
-    volumes:
-      - my-db:/var/lib/mysql
-# Names our volume
-volumes:
-  my-db:
+      - "6381:6379"
+    networks:
+      - app-tier
+
+  db:
+    image: mariadb
+    container_name: maria
+    restart: unless-stopped
+    command: --max_allowed_packet=1024M
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Aa123456!'
+
   
-  
-  version: '2.2'
-services:
-  es01:
+  elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
     restart: unless-stopped
     environment:
@@ -44,6 +38,7 @@ services:
       - 9200:9200
       - 9300:9300
     networks:
+
       - elastic
 volumes:
   data01:
@@ -52,14 +47,7 @@ volumes:
 networks:
   elastic:
     driver: bridge
+  app-tier:
+    driver: bridge
     
     
-version: '2'
-services:
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.11.2
-    environment:
-      SERVER_NAME: kibana.example.org
-      ELASTICSEARCH_HOSTS: http://me.server.com:9200/
-    ports:
-      - 5601:5601

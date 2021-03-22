@@ -5,7 +5,8 @@ const express = require("express"),
 	tokenVerifier = require('./security/token_verifier'),
 	logger = require('./util/logger'),
 	blogsDb = require('./db/blogs_db'),
-	authorsDb = require('./db/authors_db');
+	authorsDb = require('./db/authors_db'),
+	cache = require('./cache/cache');
 
 
 
@@ -72,8 +73,8 @@ let startprom = new Promise(async (resolve, reject) => {
 		await tokenVerifier.init(require(`./config/${env}/jwt.json`));
 		await logger.init(require(`./config/${env}/logger.json`));
 		await blogsDb.init(require(`./config/${env}/elastic_srch.json`));
-		await authorsDb.init(require('./config/dev/dbconf.json'));
-
+		await authorsDb.init(require('./config/${env}/dbconf.json'));
+		await cache.init(require('./config/${env}/cache_cluster.json'))
 		resolve();
 	} catch (error) {
 		reject(error);

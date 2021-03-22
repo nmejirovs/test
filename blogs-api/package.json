@@ -10,9 +10,12 @@
 		"body-parser": "^1.19.0",
 		"dayjs": "^1.10.4",
 		"express": "^4.17.1",
+		"ioredis": "^4.24.3",
 		"jsonwebtoken": "^8.5.1",
 		"jwks-rsa": "^2.0.1",
 		"lodash": "^4.17.21",
+		"mariadb": "^2.5.3",
+		"sequelize": "^6.6.1",
 		"swagger-jsdoc": "6.1.0",
 		"swagger-ui-express": "^4.1.6",
 		"winston": "^3.3.3"
