@@ -2,20 +2,11 @@ const blogsDb = require('../db/blogs_db'),
     dayjs = require('dayjs'),
     utc = require('dayjs/plugin/utc'),
     userdsDb = require('../db/users_db'),
-    cacheService = require('../cache/cache_service');
+    { getUserData } = require('./users_service');
 
 dayjs.extend(utc);
 
-const getUserData = async (userName) => {
-    let userData = await cacheService.getUserData({ username: userName });
-    if (!userData) {
-        userData = await userdsDb.getUserData({ username: userName });
-        if (userData) {
-            await cacheService.setUserData({ id: userData.id, username: userData.username })
-        }
-    }
-    return userData;
-};
+
 
 const addBlog = async ({ title, content }, userContext) => {
 
@@ -34,8 +25,7 @@ const addBlog = async ({ title, content }, userContext) => {
     }
 
     const date = dayjs.utc()
-    const blogId = await blogsDb.addBlog({ title, content, author_id: userData.id, createdAt: date, updatedAt: date });
-    return blogId;
+    return blogsDb.addBlog({ title, content, author_id: userData.id, createdAt: date, updatedAt: date });
 };
 
 const getAllBlogs = async (count) => {

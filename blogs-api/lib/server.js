@@ -8,7 +8,8 @@ const express = require("express"),
 	authorsDb = require('./db/users_db'),
 	cacheClient = require('./util/cache_client'),
 	cacheService = require('./cache/cache_service'),
-	{ get, indexOf } = require('lodash');;
+	{ get, indexOf } = require('lodash'),
+	blogsLikesDb = require('./db/blogs_likes_db');
 
 
 
@@ -25,7 +26,7 @@ const PORT = process.env.PORT || 3000
 
 const options = {
 	definition: {
-		openapi: "3.0.0",
+		openapi: "3.0.3",
 		info: {
 			title: "blogs-api",
 			version: "0.1.0",
@@ -47,7 +48,7 @@ const options = {
 			},
 		],
 	},
-	apis: ["./lib/routes/blogs.js"],
+	apis: ["./lib/routes/blogs.js", "./lib/routes/blogs_likes.js"],
 };
 
 const specs = swaggerJsdoc(options);
@@ -79,6 +80,7 @@ let startprom = new Promise(async (resolve, reject) => {
 		await tokenVerifier.init(require(`../config/${env}/jwt.json`));
 		await logger.init(require(`../config/${env}/logger.json`));
 		await blogsDb.init(require(`../config/${env}/elastic_srch.json`));
+		await blogsLikesDb.init(require(`../config/${env}/elastic_srch.json`));
 		await authorsDb.init(require(`../config/${env}/dbconf.json`));
 		await cacheClient.init(require(`../config/${env}/cache.json`))
 		await cacheService.init(cacheClient.getClient);
@@ -91,6 +93,7 @@ let startprom = new Promise(async (resolve, reject) => {
 app.use(verify_token);
 
 app.use("/blogs", require("./routes/blogs"));
+app.use("/blogslikes", require("./routes/blogs_likes"));
 
 startprom.then(() => {
 	app.listen(PORT);

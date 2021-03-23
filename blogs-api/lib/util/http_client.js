@@ -2,5 +2,6 @@ const axios = require('axios');
 
 module.exports = {
     get: axios.get,
-    post: axios.post
+    post: axios.post,
+    put: axios.put
 };
