@@ -7,3 +7,8 @@ To start it, install Node and run:
 npm install
 npm start
 ```
+
+to run in docker run next from application root:
+ > docker build -t <your username>/blog-api .
+ > docker run -p 3000:3000 -d <your username>/blog-api
+
