@@ -32,7 +32,8 @@ const getAllBlogs = async (count) => {
     const blogs = await blogsDb.getAllBlogs(count);
     const authorIds = new Set();
     blogs.map((blog) => {
-        authorIds.add(blog.author_id);
+        if(!authorIds.has(blog.author_id))
+            authorIds.add(blog.author_id);
         return true;
     });
     const usersNames = await userdsDb.getUsersNames(...authorIds);
