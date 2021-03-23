@@ -46,7 +46,7 @@
  *            description: The title of blog.
  *          content:
  *            type: string
- *            description: The content of blog.
+ *            description: The content of blog up to 1000 characters.
  *          example:
  *            title: Blog about something
  *            content: Blog content Blog content Blog content Blog content Blog content 
@@ -157,7 +157,11 @@ const express = require('express'),
 	 blogsService = require('../services/blogs_service');
 
 router.get('/', async (req, res) => {
-	res.status(200).json([]);
+	const blogs = await blogsService.getAllBlogs(req.query.count);
+	if(blogs && blogs.length > 0)
+		res.status(200).json(blogs);
+	else
+		res.status(404).send('Not found');
 });
 
 router.get('/:id', async (req, res) => {
@@ -170,8 +174,14 @@ router.post('/', async (req, res) => {
 	try {
 		const { title,  content } = req.body;
 		const blogId = await blogsService.addBlog({ title,  content }, req.userContext);
-		if(blogId === 401)
-			res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+		if(blogId.state){
+			if(blogId.state === 401)
+				res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+
+			if(blogId.state === 400)
+				res.status(400).send(blogId.msg);
+		}
+		
 
 		res.status(201).json({ blogId });
 	} catch (error) {

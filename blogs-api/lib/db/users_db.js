@@ -22,7 +22,7 @@ const init = async (conf) => {
   });
 };
 
-const getUserData = async ({username}) => {
+const getUserData = async ({ username }) => {
   const users = await User.findAll({
     where: {
       username: username
@@ -31,7 +31,20 @@ const getUserData = async ({username}) => {
   return users[0].dataValues;
 };
 
+const getUsersNames = async (ids) => {
+    const users = await User.findAll({
+      attributes: ['id', 'username'],
+      where: {
+        id: ids
+      }
+    });
+    return users.map((user)=>{
+      return user.dataValues;
+    });
+ };
+
 module.exports = {
-  init, 
-  getUserData
+  init,
+  getUserData, 
+  getUsersNames
 };
