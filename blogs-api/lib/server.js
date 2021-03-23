@@ -6,7 +6,9 @@ const express = require("express"),
 	logger = require('./util/logger'),
 	blogsDb = require('./db/blogs_db'),
 	authorsDb = require('./db/authors_db'),
-	cache = require('./cache/cache');
+	cacheClient = require('./util/cache_client'),
+	cacheService = require('./cache/cache_service');
+	
 
 
 
@@ -75,7 +77,8 @@ let startprom = new Promise(async (resolve, reject) => {
 		await logger.init(require(`../config/${env}/logger.json`));
 		await blogsDb.init(require(`../config/${env}/elastic_srch.json`));
 		await authorsDb.init(require(`../config/${env}/dbconf.json`));
-		await cache.init(require(`../config/${env}/cache.json`))
+		await cacheClient.init(require(`../config/${env}/cache.json`))
+		await cacheService.init(cacheClient.getClient);
 		resolve();
 	} catch (error) {
 		reject(error);
