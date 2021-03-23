@@ -20,36 +20,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'Aa123456!'
 
-  db2:
-    image: mariadb
-    container_name: maria2
-    restart: unless-stopped
-    volumes:
-      - type: bind
-        source: .\mariadb\init_db.sh
-        target: /usr/local/bin/init.sh
-    command: sh -c "/usr/local/bin/init.sh" && --max_allowed_packet=1024M
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: 'Aa123456!'
-
-
-
-  db-full:
-    image: mysql:5.7
-    container_name: mysql
-    restart: unless-stopped
-    volumes:
-      
-     - mariadb:/sqlscript
-    command: --init-file /sqlscript/init_db.sql
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: 'Aa123456!'
-
-  
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
     restart: unless-stopped
