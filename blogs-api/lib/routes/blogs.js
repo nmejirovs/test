@@ -157,11 +157,16 @@ const express = require('express'),
 	 blogsService = require('../services/blogs_service');
 
 router.get('/', async (req, res) => {
-	const blogs = await blogsService.getAllBlogs(req.query.count);
-	if(blogs && blogs.length > 0)
-		return res.status(200).json(blogs);
-	else
-		return res.status(404).send('Not found');
+	try {
+		const blogs = await blogsService.getAllBlogs(req.query.count);
+		if (blogs && blogs.length > 0)
+			return res.status(200).json(blogs);
+		else
+			return res.status(404).send('Not found');
+	} catch (error) {
+		logger.getLoggger().error(error);
+		return res.status(500).send('Error on getting blogs');
+	}
 });
 
 router.get('/:id', async (req, res) => {
