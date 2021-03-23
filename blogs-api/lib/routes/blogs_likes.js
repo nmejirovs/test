@@ -37,7 +37,7 @@
  *              $ref: '#/components/schemas/BlogLikeRequest'
  *      responses:
  *        "200":
- *          description: The created blog.
+ *          description: Blog like succeed.
  *          content:
  *            application/json:
  *              schema:

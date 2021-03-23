@@ -95,7 +95,7 @@
  *              $ref: '#/components/schemas/BlogAddRequest'
  *      responses:
  *        "200":
- *          description: The created blog.
+ *          description: The id of created blog.
  *          content:
  *            application/json:
  *              schema:
