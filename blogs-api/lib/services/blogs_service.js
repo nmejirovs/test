@@ -18,7 +18,7 @@ const addBlog = async ({ title,  content, author, createdAt, updatedAt }, userCo
     if(!userData){
         userData = await userdsDb.getUserData({ username: userContext.userName});
         if(userData){
-           await cacheService.setUserData({ id: userData.id, username: userData.userName })
+           await cacheService.setUserData({ id: userData.id, username: userData.username })
         }
         else{
             return 401;
