@@ -68,7 +68,7 @@ const verify_token = async (req, res, next) => {
 		req.userContext = { userName: token_data.preferred_username, isBloger: indexOf(get(token_data, 'resource_access.blog-client.roles'), 'blogger') >= 0 };
 		next();
 	} catch (err) {
-		res.status(401).send(err.message);
+		return res.status(401).send(err.message);
 	}
 }
 

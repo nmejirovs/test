@@ -159,15 +159,15 @@ const express = require('express'),
 router.get('/', async (req, res) => {
 	const blogs = await blogsService.getAllBlogs(req.query.count);
 	if(blogs && blogs.length > 0)
-		res.status(200).json(blogs);
+		return res.status(200).json(blogs);
 	else
-		res.status(404).send('Not found');
+		return res.status(404).send('Not found');
 });
 
 router.get('/:id', async (req, res) => {
 	let blog = {}
 
-	blog ? res.status(200).json(blog) : res.sendStatus(404);
+	return (blog ? res.status(200).json(blog) : res.sendStatus(404));
 });
 
 router.post('/', async (req, res) => {
@@ -176,17 +176,17 @@ router.post('/', async (req, res) => {
 		const blogId = await blogsService.addBlog({ title,  content }, req.userContext);
 		if(blogId.state){
 			if(blogId.state === 401)
-				res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+				return res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
 
 			if(blogId.state === 400)
-				res.status(400).send(blogId.msg);
+				return res.status(400).send(blogId.msg);
 		}
 		
 
-		res.status(201).json({ blogId });
+		return res.status(201).json({ blogId });
 	} catch (error) {
 		logger.getLoggger().error(error);
-		res.status(500).send('Error on adding blog');
+		return res.status(500).send('Error on adding blog');
 	}
 });
 

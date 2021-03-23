@@ -17,7 +17,7 @@ const getUserData = async (userName) => {
     return userData;
 };
 
-const addBlog = async ({ title, content, author, createdAt, updatedAt }, userContext) => {
+const addBlog = async ({ title, content }, userContext) => {
 
     if (!userContext.isBloger) {
         return { state: 401 };
