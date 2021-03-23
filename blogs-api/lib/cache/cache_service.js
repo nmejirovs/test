@@ -3,11 +3,23 @@ let getClient;
 
 const init = async (getCacheClient)=>{
     getClient = getCacheClient;
+};
+
+const cachePrefix = 'user:data'
+
+const getUserData = async ({ username }) => {
     const client = await getClient();
-    await client.set("foo", "bar");
-    const r = await client.get("foo")
+    const userData = JSON.parse(await client.get(`${cachePrefix}:${username}`));
+    return userData;
+};
+
+const setUserData = async ({ id, username}) => {
+    const client = await getClient();
+    await client.set(`${cachePrefix}:${username}`, JSON.stringify({ id }), "EX", 18000);
 };
 
 module.exports = {
-    init
+    init, 
+    getUserData,
+    setUserData
 }

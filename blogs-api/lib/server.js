@@ -7,8 +7,9 @@ const express = require("express"),
 	blogsDb = require('./db/blogs_db'),
 	authorsDb = require('./db/users_db'),
 	cacheClient = require('./util/cache_client'),
-	cacheService = require('./cache/cache_service');
-	
+	cacheService = require('./cache/cache_service'),
+	{ get, indexOf } = require('lodash');;
+
 
 
 
@@ -46,7 +47,7 @@ const options = {
 			},
 		],
 	},
-	apis: ["./routes/blogs.js"],
+	apis: ["./lib/routes/blogs.js"],
 };
 
 const specs = swaggerJsdoc(options);
@@ -62,7 +63,9 @@ const verify_token = async (req, res, next) => {
 	try {
 		req.token = req.headers.authorization;
 		let token_data = await tokenVerifier.verify_token(req.token.split(' ')[1]);
-		req.userData = { userName: token_data.preferred_username };
+		if (indexOf(get(token_data, 'aud'), 'blog-client') < 0)
+			throw new Error('Token has nout right audience');
+		req.userContext = { userName: token_data.preferred_username, isBloger: indexOf(get(token_data, 'resource_access.blog-client.roles'), 'blogger') >= 0 };
 		next();
 	} catch (err) {
 		res.status(401).send(err.message);
@@ -72,7 +75,7 @@ const verify_token = async (req, res, next) => {
 let startprom = new Promise(async (resolve, reject) => {
 	try {
 		const env = process.NODE_ENV || 'dev';
-		
+
 		await tokenVerifier.init(require(`../config/${env}/jwt.json`));
 		await logger.init(require(`../config/${env}/logger.json`));
 		await blogsDb.init(require(`../config/${env}/elastic_srch.json`));

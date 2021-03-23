@@ -24,17 +24,37 @@
  *          createdAt:
  *            type: string
  *            format: date
- *            description: The date of the record creation.
+ *            description: The date of the record creation, genetrated automatically.
  *          updatedAt:
  *            type: string
  *            format: date
- *            description: The date of the record update.
+ *            description: The date of the record update, genetrated automatically.
  *        example:
  *          title: Blog about something
  *          content: Blog content Blog content Blog content Blog content Blog content 
- *          author: Test User
+ *          author: Some Author
  *          createdAt: "2021-03-20T22:01:10"
  *          updatedAt: "2021-03-21T22:01:10"
+ *      BlogAddRequest:
+ *        type: object
+ *        required:
+ *          - title
+ *          - content
+ *        properties:
+ *          title:
+ *            type: string
+ *            description: The title of blog.
+ *          content:
+ *            type: string
+ *            description: The content of blog.
+ *          example:
+ *            title: Blog about something
+ *            content: Blog content Blog content Blog content Blog content Blog content 
+ *      BlogAddResponse:
+ *        type: object
+ *        properties:
+ *          blogId:
+ *            type: string
 */
 /**
  * @swagger
@@ -52,20 +72,27 @@
  *                $ref: '#/components/schemas/Blog'
  *    post:
  *      summary: Creates a new blog
+ *      parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *           format: Bearer <JWT token base64 string form keycloak>
+ *         required: true
  *      tags: [Blogs]
  *      requestBody:
  *        required: true
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Blog'
+ *              $ref: '#/components/schemas/BlogAddRequest'
  *      responses:
  *        "200":
  *          description: The created blog.
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Blog'
+ *                $ref: '#/components/schemas/BlogAddResponse'
  *  /blogs/{id}:
  *    get:
  *      summary: Gets a blog by id
@@ -126,9 +153,8 @@
 
 const express = require('express'),
      logger = require('../util/logger'),
-     router = express.Router();
-
-const blogsService = require('../services/blogs_service');
+     router = express.Router(),
+	 blogsService = require('../services/blogs_service');
 
 router.get('/', async (req, res) => {
 	res.status(200).json([]);
@@ -142,9 +168,12 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
 	try {
-		const { title,  content, author, createdAt, updatedAt } = req.body;
-		await blogsService.addBlog({ title,  content, author, createdAt, updatedAt });	
-		res.status(201).json({ title,  content, author, createdAt, updatedAt });
+		const { title,  content } = req.body;
+		const blogId = await blogsService.addBlog({ title,  content }, req.userContext);
+		if(blogId === 401)
+			res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+
+		res.status(201).json({ blogId });
 	} catch (error) {
 		logger.getLoggger().error(error);
 		res.status(500).send('Error on adding blog');

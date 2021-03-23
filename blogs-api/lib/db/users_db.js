@@ -20,14 +20,18 @@ const init = async (conf) => {
     freezeTableName: true, // Model tableName will be the same as the model name
     timestamps: false
   });
+};
 
-  // const user = await User.findAll({
-  //   where: {
-  //     username: 'natantest'
-  //   }
-  // });
+const getUserData = async ({username}) => {
+  const users = await User.findAll({
+    where: {
+      username: username
+    }
+  });
+  return users[0].dataValues;
 };
 
 module.exports = {
-  init
+  init, 
+  getUserData
 };
