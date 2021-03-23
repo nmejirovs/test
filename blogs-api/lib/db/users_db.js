@@ -8,7 +8,7 @@ const init = async (conf) => {
     dialect: conf.dialect
   });
 
-  User = sequelize.define('authors', {
+  User = sequelize.define('users', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true

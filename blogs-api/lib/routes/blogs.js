@@ -128,7 +128,7 @@ const express = require('express'),
      logger = require('../util/logger'),
      router = express.Router();
 
-const blogsContentSvc = require('../services/blogs_content_svc');
+const blogsService = require('../services/blogs_service');
 
 router.get('/', async (req, res) => {
 	res.status(200).json([]);
@@ -143,7 +143,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
 	try {
 		const { title,  content, author, createdAt, updatedAt } = req.body;
-		await blogsContentSvc.addBlog({ title,  content, author, createdAt, updatedAt });	
+		await blogsService.addBlog({ title,  content, author, createdAt, updatedAt });	
 		res.status(201).json({ title,  content, author, createdAt, updatedAt });
 	} catch (error) {
 		logger.getLoggger().error(error);

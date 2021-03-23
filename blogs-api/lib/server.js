@@ -5,7 +5,7 @@ const express = require("express"),
 	tokenVerifier = require('./security/token_verifier'),
 	logger = require('./util/logger'),
 	blogsDb = require('./db/blogs_db'),
-	authorsDb = require('./db/authors_db'),
+	authorsDb = require('./db/users_db'),
 	cacheClient = require('./util/cache_client'),
 	cacheService = require('./cache/cache_service');
 	
