@@ -33,6 +33,7 @@ describe('blogs service test', () => {
 			});
 
 			blogsDbMock.getAllBlogs.resolves([{
+				id: 1,
 				title: 'someTitle',
 				content: 'Blog content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
 				author_id: 1,
@@ -40,6 +41,7 @@ describe('blogs service test', () => {
 				updatedAt: '2021-03-24 08:00:00'
 			},
 			{
+				id: 2,
 				title: 'someTitle1',
 				content: 'Blog1 content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
 				author_id: 2,
@@ -48,32 +50,34 @@ describe('blogs service test', () => {
 			}]);
 
 			usersDbMock.getUsersNames.resolves([{
-				id: 1, 
+				id: 1,
 				username: 'user one'
 			},
 			{
-				id: 2, 
+				id: 2,
 				username: 'user two'
 			}]);
 
 			const result = await sut.getAllBlogs(2);
-			
+
 			result.should.be.deepEqual([
 				{
-				  title: 'someTitle',
-				  content: 'Blog content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
-				  author: 'user one',
-				  createdAt: '2021-03-23 08:00:00',
-				  updatedAt: '2021-03-24 08:00:00'
+					id: 1,
+					title: 'someTitle',
+					content: 'Blog content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
+					author: 'user one',
+					createdAt: '2021-03-23 08:00:00',
+					updatedAt: '2021-03-24 08:00:00'
 				},
 				{
-				  title: 'someTitle1',
-				  content: 'Blog1 content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
-				  author: 'user two',
-				  createdAt: '2021-03-23 08:00:00',
-				  updatedAt: '2021-03-24 08:00:00'
+					id: 2,
+					title: 'someTitle1',
+					content: 'Blog1 content Blog content Blog content Blog content Blog content Blog content Blog content Blog content',
+					author: 'user two',
+					createdAt: '2021-03-23 08:00:00',
+					updatedAt: '2021-03-24 08:00:00'
 				}
-			  ]);
+			]);
 		});
 	});
 });
