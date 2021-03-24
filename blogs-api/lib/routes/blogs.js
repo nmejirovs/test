@@ -36,6 +36,36 @@
  *          author: Some Author
  *          createdAt: "2021-03-20T22:01:10"
  *          updatedAt: "2021-03-21T22:01:10"
+ *      BlogNoId:
+ *        type: object
+ *        required:
+ *          - title
+ *          - author
+ *          - finished
+ *        properties:
+ *          title:
+ *            type: string
+ *            description: The title of blog.
+ *          content:
+ *            type: string
+ *            description: The content of blog.
+ *          author:
+ *            type: string
+ *            description: Who wrote the blog?
+ *          createdAt:
+ *            type: string
+ *            format: date
+ *            description: The date of the record creation, genetrated automatically.
+ *          updatedAt:
+ *            type: string
+ *            format: date
+ *            description: The date of the record update, genetrated automatically.
+ *        example:
+ *          title: Blog about something
+ *          content: Blog content Blog content Blog content Blog content Blog content 
+ *          author: Some Author
+ *          createdAt: "2021-03-20T22:01:10"
+ *          updatedAt: "2021-03-21T22:01:10"
  *      BlogAddRequest:
  *        type: object
  *        required:
@@ -95,12 +125,89 @@
  *            schema:
  *              $ref: '#/components/schemas/BlogAddRequest'
  *      responses:
- *        "200":
+ *        "201":
  *          description: The id of created blog.
  *          content:
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/BlogAddResponse'
+ *  /blogs/{id}:
+ *    get:
+ *      summary: Gets a blog by id
+ *      parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *           format: Bearer <JWT token base64 string from keycloak>
+ *         required: true
+ *         description: JWT token
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The blog id
+ *      tags: [Blogs]
+ *      responses:
+ *        "200":
+ *          description: The blog.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/BlogNoId'
+ *        "404":
+ *          description: Blog not found.
+ *    put:
+ *      summary: Updates a blog
+ *      tags: [Blogs]
+ *      parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *           format: Bearer <JWT token base64 string from keycloak>
+ *         required: true
+ *         description: JWT token
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The blog id
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/BlogAddRequest'
+ *      responses:
+ *        "202":
+ *          description: Update was successful.
+ *        "404":
+ *          description: Blog not found.
+ *    delete:
+ *      summary: Deletes a blog by id
+ *      tags: [Blogs]
+ *      parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *           format: Bearer <JWT token base64 string from keycloak>
+ *         required: true
+ *         description: JWT token
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The blog id
+ *      responses:
+ *        "202":
+ *          description: Delete was successful.
+ *        "404":
+ *          description: Blog not found.
  */
 
 const express = require('express'),
@@ -173,7 +280,7 @@ router.put('/:id', async (req, res) => {
 			}
 		}
 
-		return res.status(201).json(result);
+		return res.status(202).json(result);
 
 	} catch (error) {
 		logger.getLoggger().error(error);
@@ -196,7 +303,7 @@ router.delete('/:id', async (req, res) => {
 			}
 		}
 
-		return res.status(201).json(result);
+		return res.status(202).json(result);
 
 	} catch (error) {
 		logger.getLoggger().error(error);

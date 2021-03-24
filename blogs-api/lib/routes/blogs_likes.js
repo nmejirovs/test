@@ -36,7 +36,37 @@
  *            schema:
  *              $ref: '#/components/schemas/BlogLikeRequest'
  *      responses:
- *        "200":
+ *        "201":
+ *          description: Blog like succeed.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/BlogLikeResponse'
+ *  /blogslikes/{blogId}:
+ *    delete:
+ *      summary: Add like for blog
+ *      parameters:
+ *       - in: header
+ *         name: authorization
+ *         schema:
+ *           type: string
+ *           format: Bearer <JWT token base64 string form keycloak>
+ *         required: true
+ *       - in: path
+ *         name: blogId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The blog id
+ *      tags: [Blogs]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/BlogLikeRequest'
+ *      responses:
+ *        "202":
  *          description: Blog like succeed.
  *          content:
  *            application/json:
@@ -73,7 +103,7 @@ router.delete('/:blogId', async (req, res) => {
 				return res.status(401).send('User is not registered in blogs application');
 		}
 		
-		return res.status(201).json(result);
+		return res.status(202).json(result);
 	} catch (error) {
 		logger.getLoggger().error(error);
 		return res.status(500).send('Error on remove blog like');
