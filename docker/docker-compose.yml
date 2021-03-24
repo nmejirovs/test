@@ -41,7 +41,7 @@ services:
       - elastic
 
   blog-api:
-    image: natanm/blog-api:0.0.3  
+    image: natanm/blog-api:0.0.5  
     restart: unless-stopped
     ports:
       - 3000:3000 
