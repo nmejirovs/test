@@ -6,6 +6,95 @@
 	},
 	"item": [
 		{
+			"name": "AddBlog",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "username",
+							"value": "testblogger",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "blog-client",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://lemur-2.cloud-iam.com/auth/realms/natantest/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "test-console",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "34e8a120-59cd-4e8a-ac92-36e60340a20e",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Aa123456!",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Blog about something\",\r\n  \"content\": \"Blog content Blog content Blog content Blog content Blog contentBlog\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/blogs/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"blogs",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetAllBlogs",
 			"request": {
 				"auth": {
@@ -92,7 +181,87 @@
 			"response": []
 		},
 		{
-			"name": "AddBlogLike",
+			"name": "GetBlogByID",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "clientId",
+							"value": "blog-client",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Aa123456!",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://lemur-2.cloud-iam.com/auth/realms/natantest/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "iam-console",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "34e8a120-59cd-4e8a-ac92-36e60340a20e",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/blogs/Tj1WZngBrtfhTtxxae6r",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"blogs",
+						"Tj1WZngBrtfhTtxxae6r"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBlog",
 			"request": {
 				"auth": {
 					"type": "oauth2",
@@ -154,11 +323,100 @@
 						}
 					]
 				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"HAAA Blog about something\",\r\n  \"content\": \"My test Blog content Blog content Blog content Blog content Blog contentBlog\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/blogs/Tj1WZngBrtfhTtxxae6r",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"blogs",
+						"Tj1WZngBrtfhTtxxae6r"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddBlogLike",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "blog-client",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://lemur-2.cloud-iam.com/auth/realms/natantest/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "test-console",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "34e8a120-59cd-4e8a-ac92-36e60340a20e",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Aa123456!",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"blogId\": \"kJEbX3gBlXuOB9q6nMqK\"\r\n}",
+					"raw": "{\r\n  \"blogId\": \"Tj1WZngBrtfhTtxxae6r\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -181,7 +439,96 @@
 			"response": []
 		},
 		{
-			"name": "AddBlog",
+			"name": "RemoveBlogLike",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "blog-client",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://lemur-2.cloud-iam.com/auth/realms/natantest/protocol/openid-connect/token",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "test-console",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "34e8a120-59cd-4e8a-ac92-36e60340a20e",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Aa123456!",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/blogslikes/Tj1WZngBrtfhTtxxae6r",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"blogslikes",
+						"Tj1WZngBrtfhTtxxae6r"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveBlog",
 			"request": {
 				"auth": {
 					"type": "oauth2",
@@ -243,11 +590,11 @@
 						}
 					]
 				},
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"Blog about something\",\r\n  \"content\": \"Blog content Blog content Blog content Blog content Blog contentBlog\"\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -255,7 +602,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/blogs/",
+					"raw": "http://localhost:3000/blogs/Tj1WZngBrtfhTtxxae6r",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -263,7 +610,7 @@
 					"port": "3000",
 					"path": [
 						"blogs",
-						""
+						"Tj1WZngBrtfhTtxxae6r"
 					]
 				}
 			},
