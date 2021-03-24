@@ -122,21 +122,50 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
 	try {
 		const { title,  content } = req.body;
-		const blogId = await blogsService.addBlog({ title,  content }, req.userContext);
-		if(blogId.state){
-			if(blogId.state === 401)
-				return res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+		const result = await blogsService.addBlog({ title,  content }, req.userContext);
 
-			if(blogId.state === 400)
-				return res.status(400).send(blogId.msg);
+		if(result.state){
+			if(result.msg){
+				return res.status(result.state).send(result.msg);
+			}
+			else{
+				
+				if(result.state === 401)
+					return res.status(401).send('User is not authorized to post blogs or not registered in blogs application');
+			}
 		}
 		
 
-		return res.status(201).json({ blogId });
+		return res.status(201).json({ blogId: result });
 	} catch (error) {
 		logger.getLoggger().error(error);
 		return res.status(500).send('Error on adding blog');
 	}
 });
+
+router.put('/:id', async (req, res) => {
+	try {
+		const { title, content } = req.body;
+		const result = await blogsService.updateBlog(req.params.id, { title, content }, req.userContext)
+
+		if(result.state){
+			if(result.msg){
+				return res.status(result.state).send(result.msg);
+			}
+			else{
+				
+				if(result.state === 401)
+					return res.status(401).send('User is not authorized to update blogs');
+			}
+		}
+
+		return res.status(201).json(result);
+
+	} catch (error) {
+		logger.getLoggger().error(error);
+		return res.status(500).send('Error on updating blog');
+	}
+});
+
 
 module.exports = router;

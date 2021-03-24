@@ -52,13 +52,13 @@ const express = require('express'),
 router.post('/', async (req, res) => {
 	try {
 		const { blogId } = req.body;
-		const blogLikeId = await blogsLikesService.addLike({ blogId }, req.userContext);
-		if(blogLikeId.state){
-			if(blogblogLikeId.state === 401)
+		const result = await blogsLikesService.addLike({ blogId }, req.userContext);
+		if(result.state){
+			if(result.state === 401)
 				return res.status(401).send('User is not registered in blogs application');
 		}
 		
-		return res.status(201).json(true);
+		return res.status(201).json(result);
 	} catch (error) {
 		logger.getLoggger().error(error);
 		return res.status(500).send('Error on adding blog like');
