@@ -1,6 +1,6 @@
 {
     "host":{
-        "port": 6381,
+        "port": 6379,
         "host": "me.server.com"
       }
 }
