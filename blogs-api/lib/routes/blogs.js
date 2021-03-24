@@ -30,6 +30,7 @@
  *            format: date
  *            description: The date of the record update, genetrated automatically.
  *        example:
+ *          id: AxDfNT123
  *          title: Blog about something
  *          content: Blog content Blog content Blog content Blog content Blog content 
  *          author: Some Author
