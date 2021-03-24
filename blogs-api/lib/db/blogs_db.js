@@ -22,7 +22,10 @@ const getAllBlogs = async (count) => {
         );
 
         return get(res, 'data.hits.hits').map((record) => {
-            return record._source
+            return {
+                id: record._id,
+                ...record._source
+            };
         });
     } catch (error) {
         if(get(error, 'response.status') === 404){

@@ -47,6 +47,7 @@ const getAllBlogs = async (count) => {
 
     return blogs.map((blog) => {
         return {
+            id: blog.id,
             title: blog.title,
             content: blog.content,
             author: usersNamesMap.get(blog.author_id),
