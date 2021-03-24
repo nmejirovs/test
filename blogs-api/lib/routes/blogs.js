@@ -119,6 +119,20 @@ router.get('/', async (req, res) => {
 	}
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+		const blog = await blogsService.getBlogById(req.params.id);
+		if(blog.state){
+			return res.status(blog.state).send(blog.msg || 'error');
+		}
+		if (blog)
+			return res.status(200).json(blog);
+	} catch (error) {
+		logger.getLoggger().error(error);
+		return res.status(500).send('Error on getting blog');
+	}
+});
+
 router.post('/', async (req, res) => {
 	try {
 		const { title,  content } = req.body;
@@ -164,6 +178,29 @@ router.put('/:id', async (req, res) => {
 	} catch (error) {
 		logger.getLoggger().error(error);
 		return res.status(500).send('Error on updating blog');
+	}
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+		const result = await blogsService.removeBlog(req.params.id, req.userContext)
+
+		if(result.state){
+			if(result.msg){
+				return res.status(result.state).send(result.msg);
+			}
+			else{
+				
+				if(result.state === 401)
+					return res.status(401).send('User is not authorized to update blogs');
+			}
+		}
+
+		return res.status(201).json(result);
+
+	} catch (error) {
+		logger.getLoggger().error(error);
+		return res.status(500).send('Error on deleting blog');
 	}
 });
 

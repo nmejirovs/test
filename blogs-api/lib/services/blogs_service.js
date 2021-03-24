@@ -19,6 +19,31 @@ const validateInput = ({ title, content })=>{
     return true;
 };
 
+const enrichWithAuthorsNames = async (blogs) => {
+    const authorIds = new Set();
+    blogs.map((blog) => {
+        if(!authorIds.has(blog.author_id))
+            authorIds.add(blog.author_id);
+        return true;
+    });
+    const usersNames = await userdsDb.getUsersNames(...authorIds);
+    const usersNamesMap = new Map();
+    usersNames.map((userNameEnt) => {
+        usersNamesMap.set(userNameEnt.id, userNameEnt.username)
+    });
+
+    return blogs.map((blog) => {
+        return {
+            id: blog.id,
+            title: blog.title,
+            content: blog.content,
+            author: usersNamesMap.get(blog.author_id),
+            createdAt: blog.createdAt,
+            updatedAt: blog.updatedAt
+        };
+    });
+};
+
 const addBlog = async ({ title, content }, userContext) => {
 
     if (!userContext.isBloger) {
@@ -47,29 +72,18 @@ const getAllBlogs = async (count) => {
     if(blogs.length == 0){
         return blogs;
     }
-    const authorIds = new Set();
-    blogs.map((blog) => {
-        if(!authorIds.has(blog.author_id))
-            authorIds.add(blog.author_id);
-        return true;
-    });
-    const usersNames = await userdsDb.getUsersNames(...authorIds);
-    const usersNamesMap = new Map();
-    usersNames.map((userNameEnt) => {
-        usersNamesMap.set(userNameEnt.id, userNameEnt.username)
-    });
 
-    return blogs.map((blog) => {
-        return {
-            id: blog.id,
-            title: blog.title,
-            content: blog.content,
-            author: usersNamesMap.get(blog.author_id),
-            createdAt: blog.createdAt,
-            updatedAt: blog.updatedAt
-        };
-    });
+    return enrichWithAuthorsNames(blogs);
+}
 
+const getBlogById = async (blogId) => {
+    const blog = await blogsDb.getBlogByID(blogId);
+    if(blog.state){
+        return blog;
+    }
+
+    const result = (await enrichWithAuthorsNames([blog]))[0];
+    return result;
 }
 
 const updateBlog = async ( id, { title, content }, userContext)=>{
@@ -89,8 +103,19 @@ const updateBlog = async ( id, { title, content }, userContext)=>{
     return await blogsDb.updateBlog(id, { blog: { title, content, updatedAt: dayjs.utc()}, userId: userData.id });
 };
 
+const removeBlog = async ( id, userContext)=>{
+    const userData = await getUserData(userContext.userName);
+    if (!userData) {
+        return { state: 401 };
+    }
+
+    return await blogsDb.removeBlog(id, userData.id);
+};
+
 module.exports = {
     addBlog,
     getAllBlogs,
-    updateBlog
+    updateBlog,
+    getBlogById,
+    removeBlog
 };

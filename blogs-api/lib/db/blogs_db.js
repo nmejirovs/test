@@ -35,6 +35,22 @@ const getAllBlogs = async (count) => {
     }
 };
 
+const getBlogByID = async (blogId) => {
+    let res;
+    try {
+        res = await httpClient.get(`${config['server_url']}/blog/_doc/${blogId}`);
+
+        return { ...get(res, 'data._source') };
+
+    } catch (error) {
+        if (get(error, 'response.status') === 404) {
+            return { state: 404, msg: 'Blog not found' };
+        }
+        throw error;
+    }
+};
+
+
 const updateBlog = async (id, { blog: { title, content, updatedAt}, userId }) => {
     try {
         const res = await httpClient.post(`${config['server_url']}/blog/_update_by_query`,
@@ -86,9 +102,58 @@ const updateBlog = async (id, { blog: { title, content, updatedAt}, userId }) =>
     }
 };
 
+const removeBlog = async (id, userId) => {
+    try {
+        const res = await httpClient.post(`${config['server_url']}/blog/_delete_by_query`,
+            {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "match": {
+                                    "_id": `${id}`
+                                }
+                            },
+                            {
+                                "match": {
+                                    "author_id": `${userId}`
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        );
+
+        if(get(res, 'data.deleted') == 0){
+            try {
+                const resp = await httpClient.get(`${config['server_url']}/blog/_doc/${id}`);   
+                if(get(resp, 'data._source.author_id') != userId){
+                    return { state: 401, msg: 'Blog can be deleted by author only' };
+                }
+            } catch (err) {
+                if (get(err, 'response.status') === 404) {
+                    return { state: 404, msg: 'Blog not found' };
+                }
+                throw err;
+            }
+        }
+        
+        return true;
+
+    } catch (error) {
+        if (get(error, 'response.status') === 404) {
+            return { state: 404, msg: 'Blog not found' };
+        }
+        throw error;
+    }
+};
+
 module.exports = {
     init,
     addBlog,
     getAllBlogs,
-    updateBlog
+    updateBlog,
+    getBlogByID,
+    removeBlog
 }

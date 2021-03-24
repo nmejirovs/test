@@ -10,9 +10,34 @@ const addLikeForBlog = async ({ blogId, userId }) => {
     if (get(res, 'data.result') == 'created' || get(res, 'data.result') == 'updated') {
         return true;
     }
+    else {
+        return false;
+    }
 };
+
+const removeLikeForBlog = async ({ blogId, userId }) => {
+    try {
+        const res = await httpClient.delete(`${config['server_url']}/blog_likes/_doc/${blogId}_${userId}`);
+        if (get(res, 'data.result') == 'deleted') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    } catch (error) {
+        if (get(error, 'response.status') === 404) {
+            return { state: 404, msg: 'Blog like not found' };
+        }
+        throw error;
+    }
+
+};
+
+
+
 
 module.exports = {
     init,
-    addLikeForBlog
+    addLikeForBlog,
+    removeLikeForBlog
 }

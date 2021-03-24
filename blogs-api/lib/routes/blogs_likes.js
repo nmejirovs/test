@@ -65,4 +65,19 @@ router.post('/', async (req, res) => {
 	}
 });
 
+router.delete('/:blogId', async (req, res) => {
+	try {
+		const result = await blogsLikesService.removeLike({ blogId:req.params.blogId }, req.userContext);
+		if(result.state){
+			if(result.state === 401)
+				return res.status(401).send('User is not registered in blogs application');
+		}
+		
+		return res.status(201).json(result);
+	} catch (error) {
+		logger.getLoggger().error(error);
+		return res.status(500).send('Error on remove blog like');
+	}
+});
+
 module.exports = router;
