@@ -6,9 +6,9 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
-      - "6379:6379"
+      - "6381:6379"
     networks:
-      - app-tier
+      - app-tier3
 
   db:
     image: mariadb
@@ -57,5 +57,10 @@ networks:
     driver: bridge
   app-tier:
     driver: bridge
+  app-tier3:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
+    internal: false
     
     
