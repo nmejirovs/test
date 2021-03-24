@@ -1,5 +1,5 @@
-CREATE DATABASE `testdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-CREATE TABLE `users` (
+CREATE DATABASE IF NOT EXISTS `testdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE TABLE  IF NOT EXISTS `testdb`.`users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
@@ -11,5 +11,5 @@ INSERT INTO `testdb`.`users`
 VALUES
 (1, 'testuser'),
 (2, 'testblogger');
-CREATE USER 'test'@'%' IDENTIFIED BY '3aCu4ewu';
+CREATE USER  IF NOT EXISTS 'test'@'%' IDENTIFIED BY '3aCu4ewu';
 GRANT ALL PRIVILEGES ON *.* TO 'test'@'%' IDENTIFIED BY '3aCu4ewu';

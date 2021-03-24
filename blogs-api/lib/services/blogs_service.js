@@ -30,6 +30,9 @@ const addBlog = async ({ title, content }, userContext) => {
 
 const getAllBlogs = async (count) => {
     const blogs = await blogsDb.getAllBlogs(count);
+    if(blogs.length == 0){
+        return blogs;
+    }
     const authorIds = new Set();
     blogs.map((blog) => {
         if(!authorIds.has(blog.author_id))

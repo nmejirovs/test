@@ -110,10 +110,8 @@ const express = require('express'),
 router.get('/', async (req, res) => {
 	try {
 		const blogs = await blogsService.getAllBlogs(req.query.count);
-		if (blogs && blogs.length > 0)
+		if (blogs)
 			return res.status(200).json(blogs);
-		else
-			return res.status(404).send('Not found');
 	} catch (error) {
 		logger.getLoggger().error(error);
 		return res.status(500).send('Error on getting blogs');

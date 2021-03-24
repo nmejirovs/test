@@ -13,15 +13,23 @@ const addBlog = async (blog) => {
 };
 
 const getAllBlogs = async (count) => {
-    const res = await httpClient.post(`${config['server_url']}/blog/_search`,
-        {
-            "size": count
-        }
-    );
+    let res;
+    try {
+        res = await httpClient.post(`${config['server_url']}/blog/_search`,
+            {
+                "size": count
+            }
+        );
 
-    return get(res, 'data.hits.hits').map((record)=>{
-        return record._source
-    });
+        return get(res, 'data.hits.hits').map((record) => {
+            return record._source
+        });
+    } catch (error) {
+        if(get(error, 'response.status') === 404){
+            return [];
+        }
+        throw error;
+    }
 };
 
 module.exports = {
