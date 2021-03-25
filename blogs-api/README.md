@@ -3,6 +3,9 @@ This is just a simple CRUD API of Blogs made with Express. The aim is to provide
 
 Api documentation can be found on path "/api-docs"
 
+Elastic search used for storing blogs in order to make
+quicker records finding.
+
 Authentication powered by "cloud-iam". Management console address: https://lemur-2.cloud-iam.com/auth/admin/natantest/console/#/realms/natantest/users
 username:  testadmin  
 password: Aa123456!
